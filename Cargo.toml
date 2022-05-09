@@ -1,0 +1,14 @@
+[package]
+edition = "2021"
+name = "test-monorepo-cd"
+version = "0.1.0"
+
+[workspace]
+members = [
+  "test-monorepo-cd1",
+  "test-monorepo-cd2",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
