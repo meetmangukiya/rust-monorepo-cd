@@ -1,5 +1,7 @@
 [package]
+description = "workspace member"
 edition = "2021"
+license = "MIT"
 name = "test-monorepo-cd1"
 version = "0.1.0"
 
