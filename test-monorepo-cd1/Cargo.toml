@@ -9,4 +9,4 @@ version = "0.2.2"
 
 [dependencies]
 test-monorepo-cd = {version = "^0.2.3-alpha.1", path = "../"}
-test-monorepo-cd2 = {version = "^0.2.0", path = "../test-monorepo-cd2"}
+test-monorepo-cd2 = {version = "^0.2.3-alpha.1", path = "../test-monorepo-cd2"}
