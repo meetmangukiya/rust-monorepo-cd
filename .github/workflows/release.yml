@@ -83,4 +83,4 @@ jobs:
           fi
 
           git cliff $from_version..$current_version > GENERATED_CHANGELOG.md
-          cat GENERATED_CHANGELOG
+          cat GENERATED_CHANGELOG.md
