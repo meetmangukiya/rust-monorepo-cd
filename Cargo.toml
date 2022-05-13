@@ -3,7 +3,7 @@ description = "just testing crates publishing"
 edition = "2021"
 license = "MIT"
 name = "test-monorepo-cd"
-version = "0.2.5-alpha.8"
+version = "0.2.5-alpha.9"
 
 [workspace]
 members = [
