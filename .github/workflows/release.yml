@@ -96,4 +96,4 @@ jobs:
           tag_name: ${{ env.RELEASE_VERSION }}
           release_name: ${{ env.RELEASE_VERSION }}
           body_path: GENERATED_CHANGELOG.md
-          prerelease: ${{ env.RELEASE_TYPE == "alpha" }}
+          prerelease: ${{ env.RELEASE_TYPE == 'alpha' }}
