@@ -27,6 +27,9 @@ jobs:
       CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       RELEASE_TYPE: ${{ github.event.inputs.release_type }}
 
+    outputs:
+      release_version: ${{ steps.changelog.outputs.release_version }}
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -49,15 +52,15 @@ jobs:
         with:
           crate: cargo-release
           version: latest
-      - name: Cargo login
-        run: |
-          cargo login $CARGO_TOKEN
-      - name: Dry-run cargo release
-        run: |
-          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
-      - name: Publish release
-        run: |
-          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
+      # - name: Cargo login
+      #   run: |
+      #     cargo login $CARGO_TOKEN
+      # - name: Dry-run cargo release
+      #   run: |
+      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
+      # - name: Publish release
+      #   run: |
+      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -70,10 +73,13 @@ jobs:
           crate: git-cliff
           version: latest
       - name: Publish changelog
+        id: changelog
         run: |
           current_version=$(git tag --contains HEAD -l "v*" | head -1)
-          from_version=$(node .github/workflows/release-tag-from.js $current_version ${RELEASE_TYPE:-alpha})
+          from_version=$(node .github/workflows/release-tag-from.js $current_version $RELEASE_TYPE)
           echo from $from_version to $current_version
+
+          echo "::set-output name=release_version::$current_version"
 
           if git rev-parse "$from_version" >/dev/null 2>&1; then
             echo "tag exists, can generate changelog";
@@ -84,3 +90,13 @@ jobs:
 
           git cliff $from_version..$current_version > GENERATED_CHANGELOG.md
           cat GENERATED_CHANGELOG.md
+      - name: Create GitHub release
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ release.outputs.release_version }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: ${{ env.RELEASE_VERSION }}
+          body_path: GENERATED_CHANGELOG.md
