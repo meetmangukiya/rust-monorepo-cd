@@ -49,24 +49,38 @@ jobs:
         with:
           crate: cargo-release
           version: latest
-      # - name: Cargo login
-      #   run: |
-      #     cargo login $CARGO_TOKEN
-      # - name: Dry-run cargo release
-      #   run: |
-      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
-      # - name: Publish release
-      #   run: |
-      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
+      - name: Cargo login
+        run: |
+          cargo login $CARGO_TOKEN
+      - name: Dry-run cargo release
+        run: |
+          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
+      - name: Publish release
+        run: |
+          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 14
-        run: |
+      - run: |
           npm i semver
+      - name: Install git-cliff
+        uses: actions-rs/install@v0.1
+        with:
+          crate: git-cliff
+          version: latest
       - name: Publish changelog
         run: |
           current_version=$(git tag --contains HEAD -l "v*" | head -1)
           from_version=$(node .github/workflows/release-tag-from.js $current_version)
           echo from $from_version to $current_version
 
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "tag exists, can generate changelog";
+          else
+            echo "tag does not exist, cannot generate changelog, publish github release manually"
+            exit 0
+          fi
+
+          git cliff $from_version..$current_version > GENERATED_CHANGELOG.md
+          cat GENERATED_CHANGELOG
