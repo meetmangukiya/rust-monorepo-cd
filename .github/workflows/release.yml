@@ -26,10 +26,6 @@ jobs:
     env:
       CARGO_TOKEN: ${{ secrets.CARGO_TOKEN }}
       RELEASE_TYPE: ${{ github.event.inputs.release_type }}
-
-    outputs:
-      release_version: ${{ steps.changelog.outputs.release_version }}
-
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -79,7 +75,7 @@ jobs:
           from_version=$(node .github/workflows/release-tag-from.js $current_version $RELEASE_TYPE)
           echo from $from_version to $current_version
 
-          echo "::set-output name=release_version::$current_version"
+          echo "::set-output name=release_version::$(echo $current_version)"
 
           if git rev-parse "$from_version" >/dev/null 2>&1; then
             echo "tag exists, can generate changelog";
