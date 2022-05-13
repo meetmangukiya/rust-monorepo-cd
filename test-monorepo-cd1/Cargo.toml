@@ -3,7 +3,7 @@ description = "workspace member"
 edition = "2021"
 license = "MIT"
 name = "test-monorepo-cd1"
-version = "0.2.2"
+version = "0.2.3-alpha.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
