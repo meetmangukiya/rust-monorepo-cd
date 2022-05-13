@@ -75,7 +75,7 @@ jobs:
       - name: Publish changelog
         id: changelog
         run: |
-          current_version=$(git tag --contains HEAD -l "v*" | head -1)
+          export current_version=$(git tag --contains HEAD -l "v*" | head -1)
           from_version=$(node .github/workflows/release-tag-from.js $current_version $RELEASE_TYPE)
           echo from $from_version to $current_version
 
