@@ -52,15 +52,15 @@ jobs:
         with:
           crate: cargo-release
           version: latest
-      # - name: Cargo login
-      #   run: |
-      #     cargo login $CARGO_TOKEN
-      # - name: Dry-run cargo release
-      #   run: |
-      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
-      # - name: Publish release
-      #   run: |
-      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
+      - name: Cargo login
+        run: |
+          cargo login $CARGO_TOKEN
+      - name: Dry-run cargo release
+        run: |
+          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
+      - name: Publish release
+        run: |
+          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
       - name: Setup node
         uses: actions/setup-node@v3
         with:
