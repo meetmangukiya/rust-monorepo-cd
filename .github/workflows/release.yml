@@ -1,16 +1,9 @@
 name: Release
 
-permissions:
-  contents: write
-
 on:
   schedule:
     - cron: "0 0 * * 0"
 
-  push:
-    branches:
-      - master
-      - ci-release-test
   workflow_dispatch:
     inputs:
       release_type:
@@ -20,10 +13,12 @@ on:
           - major
           - minor
           - patch
-          - release
           - rc
           - beta
           - alpha
+
+permissions:
+  contents: write
 
 jobs:
   release:
@@ -54,13 +49,24 @@ jobs:
         with:
           crate: cargo-release
           version: latest
-      - name: cargo-login
+      # - name: Cargo login
+      #   run: |
+      #     cargo login $CARGO_TOKEN
+      # - name: Dry-run cargo release
+      #   run: |
+      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
+      # - name: Publish release
+      #   run: |
+      #     cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
         run: |
-          cargo login $CARGO_TOKEN
-      - name: dry-run cargo release
+          npm i semver
+      - name: Publish changelog
         run: |
-          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
-      - name: release
-        run: |
-          cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
+          current_version=$(git tag --contains HEAD -l "v*" | head -1)
+          from_version=$(node .github/workflows/release-tag-from.js $current_version)
+          echo from $from_version to $current_version
 
