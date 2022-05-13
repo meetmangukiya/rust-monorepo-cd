@@ -72,10 +72,10 @@ jobs:
       - name: Publish changelog
         run: |
           current_version=$(git tag --contains HEAD -l "v*" | head -1)
-          from_version=$(node .github/workflows/release-tag-from.js $current_version)
+          from_version=$(node .github/workflows/release-tag-from.js $current_version ${RELEASE_TYPE:-alpha})
           echo from $from_version to $current_version
 
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
+          if git rev-parse "$from_version" >/dev/null 2>&1; then
             echo "tag exists, can generate changelog";
           else
             echo "tag does not exist, cannot generate changelog, publish github release manually"
