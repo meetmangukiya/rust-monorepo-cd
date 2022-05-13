@@ -75,7 +75,7 @@ jobs:
       - name: Publish changelog
         id: changelog
         run: |
-          export current_version=$(git tag --contains HEAD -l "v*" | head -1)
+          current_version=$(git tag --contains HEAD -l "v*" | head -1)
           from_version=$(node .github/workflows/release-tag-from.js $current_version $RELEASE_TYPE)
           echo from $from_version to $current_version
 
@@ -95,7 +95,7 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_VERSION: ${{ env.current_version }}
+          RELEASE_VERSION: ${{ steps.changelog.release_version }}
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
           release_name: ${{ env.RELEASE_VERSION }}
