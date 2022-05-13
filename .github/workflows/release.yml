@@ -65,5 +65,6 @@ jobs:
           cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm
       - name: release
         run: |
+          git remote -v
           cargo release --workspace ${RELEASE_TYPE:-alpha} --exclude ethers-wasm --execute --no-confirm
 
