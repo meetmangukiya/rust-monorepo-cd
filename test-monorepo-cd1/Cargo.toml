@@ -8,5 +8,5 @@ version = "0.2.5"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-test-monorepo-cd = {version = "^0.2.5-alpha.1", path = "../"}
+test-monorepo-cd = {version = "^0.2.6-alpha.1", path = "../"}
 test-monorepo-cd2 = {version = "^0.2.5-alpha.1", path = "../test-monorepo-cd2"}
